@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Plus, Minus, ShoppingCart } from "lucide-react";
+import {
+  Plus,
+  Minus,
+  ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { useCart } from "../src/context/CartContext";
 import Lightbox from "../src/Lightbox";
 
@@ -38,22 +44,47 @@ const Product: React.FC = () => {
     setQty(0);
   };
 
+  // Carousel controls (for mobile)
+  const handlePrev = () => {
+    setIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
   return (
     <section className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-      
-      <div>
+      {/* Image Section */}
+      <div className="relative">
+        {/* Mobile Carousel */}
         <button
           onClick={() => setLightbox(true)}
-          className="block w-full rounded-2xl overflow-hidden focus:outline-none focus:ring-4 focus:ring-orange-300"
+          className="block w-full rounded-none md:rounded-2xl overflow-hidden focus:outline-none focus:ring-4 focus:ring-orange-300"
         >
           <img
             src={images[index]}
             alt={`Product image ${index + 1}`}
-            className="w-full hover:opacity-90 transition"
+            className="w-full object-cover"
           />
         </button>
 
-        <div className="mt-6 grid grid-cols-4 gap-4">
+        {/* Arrows (only on mobile) */}
+        <button
+          onClick={handlePrev}
+          className="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-md md:hidden"
+        >
+          <ChevronLeft />
+        </button>
+        <button
+          onClick={handleNext}
+          className="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-md md:hidden"
+        >
+          <ChevronRight />
+        </button>
+
+        {/* Thumbnails (desktop only) */}
+        <div className="hidden md:grid mt-6 grid-cols-4 gap-4">
           {thumbs.map((t, i) => (
             <button
               key={t}
@@ -72,9 +103,9 @@ const Product: React.FC = () => {
         </div>
       </div>
 
-     
+      {/* Product Info Section */}
       <div className="px-1">
-        <p className="uppercase text-orange-500 font-bold tracking-widest text-xs md:text-sm">
+        <p className="uppercase text-gray-600 font-bold tracking-widest text-xs md:text-sm">
           Sneaker Company
         </p>
         <h2 className="text-3xl md:text-5xl font-extrabold leading-tight mt-3">
@@ -86,15 +117,17 @@ const Product: React.FC = () => {
           the weather can offer.
         </p>
 
-        <div className="mt-6 flex items-center gap-4">
-          <span className="text-3xl font-bold">${price.toFixed(2)}</span>
-          <span className="bg-orange-100 text-orange-600 font-bold px-2 py-0.5 rounded">
-            50%
-          </span>
+        <div className="mt-6 flex items-center justify-between md:justify-start md:gap-4">
+          <div className="flex items-center gap-4">
+            <span className="text-3xl font-bold">${price.toFixed(2)}</span>
+            <span className="bg-orange-100 text-orange-600 font-bold px-2 py-0.5 rounded">
+              50%
+            </span>
+          </div>
+          <p className="text-gray-400 line-through mt-1">$250.00</p>
         </div>
-        <p className="text-gray-400 line-through mt-1">$250.00</p>
 
-
+        {/* Quantity + Add to Cart */}
         <div className="mt-6 flex flex-col sm:flex-row gap-4">
           <div className="flex items-center justify-between bg-gray-100 rounded-lg px-3 py-3 sm:w-48">
             <button
@@ -125,6 +158,7 @@ const Product: React.FC = () => {
         </div>
       </div>
 
+      {/* Lightbox (desktop only) */}
       {lightbox && (
         <Lightbox
           images={images}
