@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { ShoppingCart } from "lucide-react";
+import {Menu, X, ShoppingCart } from "lucide-react";
 import CartDropdown from "./CartDropdown";
 import { useCart } from "../src/context/CartContext";
 
 const Navbar: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { count } = useCart();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <nav className="border-b border-gray-200">
@@ -45,6 +46,24 @@ const Navbar: React.FC = () => {
             alt="User avatar"
             className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-transparent hover:border-orange-500 cursor-pointer"
           />
+          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
+          {menuOpen && (
+            <div className="absolute top-full left-0 w-full bg-white shadow-md md:hidden z-50">
+              <ul className="flex flex-col gap-4 p-6 text-gray-700 font-medium">
+                <li className="hover:text-black cursor-pointer">Collections</li>
+                <li className="hover:text-black cursor-pointer">Men</li>
+                <li className="hover:text-black cursor-pointer">Women</li>
+                <li className="hover:text-black cursor-pointer">About</li>
+                <li className="hover:text-black cursor-pointer">Contact</li>
+              </ul>
+            </div>
+          )}
 
           {open && <CartDropdown onClose={() => setOpen(false)} />}
         </div>
